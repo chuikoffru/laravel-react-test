@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+//use Illuminate\Http\Request;
+use App\Http\Requests\CityStoreRequest;
 use App\City;
 
 class CityController extends Controller
@@ -25,19 +26,23 @@ class CityController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CityStoreRequest $request)
     {
+        
         $name = $request->name;
         $lat = $request->lat;
         $lng = $request->lng;
         $population = $request->population;
+    
         $result = City::create(array (
             'name' => $name,
             'lat' => $lat,
             'lng' => $lng,
             'population' => $population
         ));
+        
         return response($result, 201);
+        
     }
 
     /**
@@ -72,6 +77,9 @@ class CityController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $city = City::findOrFail($id);
+        $city->delete();
+
+        return response()->json(null, 204);
     }
 }
